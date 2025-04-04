@@ -64,8 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 card1.classList.remove('flipped');
                 card2.classList.remove('flipped');
-                card1.style.backgroundImage = 'url(images/back-card.jpg)';
-                card2.style.backgroundImage = 'url(images/back-card.jpg)';
+                card1.style.backgroundImage = 'url(images/back-card.png)';
+                card2.style.backgroundImage = 'url(images/back-card.png)';
             }, 1000);
         }
         
