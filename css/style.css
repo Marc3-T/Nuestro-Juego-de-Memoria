@@ -1,0 +1,82 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #ffebee;
+    margin: 0;
+    padding: 20px;
+    touch-action: manipulation; /* Evita zoom no deseado */
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+h1 {
+    color: #d32f2f;
+}
+
+#memory-board {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 20px auto;
+}
+
+.card {
+    width: 100%;
+    aspect-ratio: 1/1;
+    background-image: url('../images/back-card.jpg');
+    background-size: cover;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.3s;
+    -webkit-tap-highlight-color: transparent; /* Elimina el resaltado azul en iOS */
+}
+
+.card.flipped {
+    transform: rotateY(180deg);
+}
+
+.card.matched {
+    opacity: 0.5;
+    cursor: default;
+}
+
+#win-message {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    display: none;
+}
+
+#win-message h2 {
+    color: #d32f2f;
+}
+
+button {
+    background: #d32f2f;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Ajustes para iPhone */
+@media (max-width: 480px) {
+    #memory-board {
+        grid-template-columns: repeat(3, 1fr); /* 3 columnas en móviles */
+    }
+}
