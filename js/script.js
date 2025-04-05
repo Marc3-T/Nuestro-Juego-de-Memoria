@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Configuración del juego
     const cards = [
         { id: 1, image: 'images/foto1.jpg' },
         { id: 2, image: 'images/foto2.jpg' },
@@ -12,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameCards = [...cards, ...cards].sort(() => Math.random() - 0.5);
     let flippedCards = [];
     let matchedPairs = 0;
+    let canFlip = true; // Bloqueador para evitar voltear durante animaciones
 
     const memoryBoard = document.getElementById('memory-board');
     const winMessage = document.getElementById('win-message');
@@ -24,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cardElement.dataset.id = card.id;
         cardElement.dataset.index = index;
         
-        // Usar eventos táctiles y de clic
+        // Eventos para touch y click
         cardElement.addEventListener('click', flipCard);
         cardElement.addEventListener('touchend', flipCard, { passive: true });
         
@@ -32,47 +34,75 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function flipCard(e) {
-        e.preventDefault(); // Para Safari en iOS
+        if (!canFlip) return;
+        
+        e.preventDefault();
         const selectedCard = e.currentTarget;
         
-        // Evitar voltear si ya está volteada o emparejada
-        if (selectedCard.classList.contains('flipped') || flippedCards.length >= 2) return;
+        // Evitar acciones si la carta ya está volteada
+        if (selectedCard.classList.contains('flipped') || 
+            selectedCard.classList.contains('matched')) return;
         
+        // Voltear carta
         selectedCard.classList.add('flipped');
         selectedCard.style.backgroundImage = `url(${gameCards[selectedCard.dataset.index].image})`;
         flippedCards.push(selectedCard);
         
+        // Verificar match cuando hay 2 cartas volteadas
         if (flippedCards.length === 2) {
-            checkForMatch();
+            canFlip = false;
+            setTimeout(checkForMatch, 600);
         }
     }
 
     function checkForMatch() {
         const [card1, card2] = flippedCards;
+        const isMatch = card1.dataset.id === card2.dataset.id;
         
-        if (card1.dataset.id === card2.dataset.id) {
+        if (isMatch) {
             card1.classList.add('matched');
             card2.classList.add('matched');
             matchedPairs++;
             
+            // Verificar victoria
             if (matchedPairs === cards.length) {
-                setTimeout(() => {
-                    winMessage.classList.remove('hidden');
-                }, 500);
+                setTimeout(showWinMessage, 500);
             }
         } else {
+            // Volver a voltear las cartas si no hay match
             setTimeout(() => {
                 card1.classList.remove('flipped');
                 card2.classList.remove('flipped');
                 card1.style.backgroundImage = 'url(images/back-card.png)';
                 card2.style.backgroundImage = 'url(images/back-card.png)';
-            }, 1000);
+            }, 500);
         }
         
         flippedCards = [];
+        canFlip = true;
     }
 
+    function showWinMessage() {
+        winMessage.style.display = 'block';
+        winMessage.classList.remove('hidden');
+        
+        // Efecto de confeti (opcional)
+        if (window.confetti) {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+    }
+
+    // Reiniciar juego
     replayBtn.addEventListener('click', () => {
         location.reload();
     });
+
+    // Cargar confeti (opcional)
+    const confettiScript = document.createElement('script');
+    confettiScript.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js';
+    document.head.appendChild(confettiScript);
 });
