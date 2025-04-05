@@ -1,104 +1,99 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // ===== CONFIGURACIÓN =====
     const cards = [
-        { id: '1', image: 'images/foto1.jpg' }, // ¡Usa strings para IDs!
-        { id: '2', image: 'images/foto2.jpg' },
-        { id: '3', image: 'images/foto3.jpg' }
+        { id: 1, image: 'images/foto1.jpg' },
+        { id: 2, image: 'images/foto2.jpg' },
+        { id: 3, image: 'images/foto3.jpg' },
+        { id: 4, image: 'images/foto4.jpg' },
+        { id: 5, image: 'images/foto5.jpg' },
+        { id: 6, image: 'images/foto6.jpg' }
     ];
 
-    // ===== ESTADO DEL JUEGO =====
     const gameCards = [...cards, ...cards].sort(() => Math.random() - 0.5);
     let flippedCards = [];
     let matchedPairs = 0;
-    let lockBoard = false;
 
-    // ===== ELEMENTOS DOM =====
     const memoryBoard = document.getElementById('memory-board');
-    const winMessage = document.getElementById('win-message');
+    const winModal = document.getElementById('win-modal');
     const replayBtn = document.getElementById('replay-btn');
 
-    // ===== INICIALIZAR TABLERO =====
-    function initBoard() {
-        memoryBoard.innerHTML = '';
-        gameCards.forEach((card, index) => {
-            const cardEl = document.createElement('div');
-            cardEl.className = 'card';
-            cardEl.dataset.id = card.id;
-            cardEl.dataset.index = index;
-            
-            // ¡Importante! Usar eventos pointer para compatibilidad iOS
-            cardEl.addEventListener('pointerdown', flipCard);
-            
-            memoryBoard.appendChild(cardEl);
-        });
-    }
-
-    // ===== VOLTEAR CARTA =====
-    function flipCard(e) {
-        if (lockBoard) return;
+    // Crear tablero
+    gameCards.forEach((card, index) => {
+        const cardElement = document.createElement('div');
+        cardElement.classList.add('card');
+        cardElement.dataset.id = card.id;
+        cardElement.dataset.index = index;
+        cardElement.style.setProperty('--front-image', `url(${card.image})`);
         
+        cardElement.addEventListener('click', flipCard);
+        cardElement.addEventListener('touchend', flipCard, { passive: true });
+        
+        memoryBoard.appendChild(cardElement);
+    });
+
+    function flipCard(e) {
         const selectedCard = e.currentTarget;
         
-        // Evitar voltear cartas ya emparejadas
-        if (selectedCard.classList.contains('matched')) return;
+        if (selectedCard.classList.contains('flipped') || flippedCards.length >= 2) return;
         
-        // Si ya está volteada, no hacer nada
-        if (flippedCards.includes(selectedCard)) return;
-        
-        // Voltear
         selectedCard.classList.add('flipped');
-        selectedCard.style.backgroundImage = `url('${gameCards[selectedCard.dataset.index].image}')`;
         flippedCards.push(selectedCard);
         
-        // Verificar match
         if (flippedCards.length === 2) {
-            lockBoard = true;
-            setTimeout(checkForMatch, 800);
+            checkForMatch();
         }
     }
 
     function checkForMatch() {
-    const [card1, card2] = flippedCards;
-    
-    if (card1.dataset.id === card2.dataset.id) {
-        card1.classList.add('matched');
-        card2.classList.add('matched');
-        matchedPairs++;
+        const [card1, card2] = flippedCards;
         
-        // Verificar si todas las cartas están emparejadas
-        if (matchedPairs === cards.length) {
+        if (card1.dataset.id === card2.dataset.id) {
+            card1.classList.add('matched');
+            card2.classList.add('matched');
+            matchedPairs++;
+            
+            if (matchedPairs === cards.length) {
+                setTimeout(() => {
+                    winModal.classList.remove('hidden');
+                    triggerConfetti();
+                }, 800);
+            }
+        } else {
             setTimeout(() => {
-                document.getElementById('win-modal').classList.remove('hidden');
-            }, 800); // Pequeño retraso para dar feedback visual
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+            }, 1000);
         }
-    } else {
-        setTimeout(() => {
-            card1.classList.remove('flipped');
-            card2.classList.remove('flipped');
-            card1.style.backgroundImage = 'url(images/back-card.jpg)';
-            card2.style.backgroundImage = 'url(images/back-card.jpg)';
-        }, 1000);
+        
+        flippedCards = [];
     }
-    
-    flippedCards = [];
-}
 
-// Añade estos eventos al final del JS:
-document.querySelector('.close-btn').addEventListener('click', () => {
-    document.getElementById('win-modal').classList.add('hidden');
-});
+    function triggerConfetti() {
+        confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
+        });
+    }
 
-document.getElementById('replay-btn').addEventListener('click', () => {
-    location.reload();
-});
-
-    // ===== REINICIAR =====
     replayBtn.addEventListener('click', () => {
-        winMessage.style.display = 'none';
-        matchedPairs = 0;
-        initBoard();
+        winModal.classList.add('hidden');
+        resetGame();
     });
 
-    // ===== INICIAR JUEGO =====
-    initBoard();
+    function resetGame() {
+        memoryBoard.innerHTML = '';
+        flippedCards = [];
+        matchedPairs = 0;
+        gameCards.sort(() => Math.random() - 0.5).forEach((card, index) => {
+            const cardElement = document.createElement('div');
+            cardElement.classList.add('card');
+            cardElement.dataset.id = card.id;
+            cardElement.dataset.index = index;
+            cardElement.style.setProperty('--front-image', `url(${card.image})`);
+            cardElement.addEventListener('click', flipCard);
+            cardElement.addEventListener('touchend', flipCard, { passive: true });
+            memoryBoard.appendChild(cardElement);
+        });
+    }
 });
