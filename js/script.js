@@ -8,13 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 6, image: 'images/foto6.jpg' }
     ];
 
+    // Duplicar y mezclar cartas
     const gameCards = [...cards, ...cards].sort(() => Math.random() - 0.5);
     let flippedCards = [];
     let matchedPairs = 0;
 
     const memoryBoard = document.getElementById('memory-board');
-    const winModal = document.getElementById('win-modal');
-    const closeBtn = document.querySelector('.close-btn');
+    const winMessage = document.getElementById('win-message');
     const replayBtn = document.getElementById('replay-btn');
 
     // Crear tablero
@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cardElement.dataset.id = card.id;
         cardElement.dataset.index = index;
         
+        // Usar eventos táctiles y de clic
         cardElement.addEventListener('click', flipCard);
         cardElement.addEventListener('touchend', flipCard, { passive: true });
         
@@ -31,17 +32,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function flipCard(e) {
-        e.preventDefault();
+        e.preventDefault(); // Para Safari en iOS
         const selectedCard = e.currentTarget;
         
-        if (selectedCard.classList.contains('flipped') return;
+        // Evitar voltear si ya está volteada o emparejada
+        if (selectedCard.classList.contains('flipped') || flippedCards.length >= 2) return;
         
         selectedCard.classList.add('flipped');
         selectedCard.style.backgroundImage = `url(${gameCards[selectedCard.dataset.index].image})`;
         flippedCards.push(selectedCard);
         
         if (flippedCards.length === 2) {
-            setTimeout(checkForMatch, 500);
+            checkForMatch();
         }
     }
 
@@ -53,11 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
             card2.classList.add('matched');
             matchedPairs++;
             
-            // Verificar si todas las cartas están emparejadas
             if (matchedPairs === cards.length) {
                 setTimeout(() => {
-                    winModal.classList.remove('hidden');
-                }, 1000);
+                    winMessage.classList.remove('hidden');
+                }, 500);
             }
         } else {
             setTimeout(() => {
@@ -65,26 +66,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 card2.classList.remove('flipped');
                 card1.style.backgroundImage = 'url(images/back-card.png)';
                 card2.style.backgroundImage = 'url(images/back-card.png)';
-            }, 500);
+            }, 1000);
         }
         
         flippedCards = [];
     }
 
-    // Cerrar modal y reiniciar juego
-    closeBtn.addEventListener('click', () => {
-        winModal.classList.add('hidden');
-    });
-
     replayBtn.addEventListener('click', () => {
-        winModal.classList.add('hidden');
         location.reload();
-    });
-
-    // Cerrar modal al hacer clic fuera del contenido
-    winModal.addEventListener('click', (e) => {
-        if (e.target === winModal) {
-            winModal.classList.add('hidden');
-        }
     });
 });
