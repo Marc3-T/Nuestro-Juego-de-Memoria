@@ -57,39 +57,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ===== VERIFICAR MATCH =====
     function checkForMatch() {
-        const [card1, card2] = flippedCards;
-        const isMatch = card1.dataset.id === card2.dataset.id;
+    const [card1, card2] = flippedCards;
+    
+    if (card1.dataset.id === card2.dataset.id) {
+        card1.classList.add('matched');
+        card2.classList.add('matched');
+        matchedPairs++;
         
-        if (isMatch) {
-            card1.classList.add('matched');
-            card2.classList.add('matched');
-            matchedPairs++;
-            
-            // Diagnóstico en consola
-            console.log(`Pares acertados: ${matchedPairs}/${cards.length}`);
-            
-            // Verificar victoria
-            if (matchedPairs === cards.length) {
-                setTimeout(() => {
-                    winMessage.style.display = 'flex'; // ¡Clave para Safari!
-                    console.log('¡Mensaje de victoria activado!');
-                }, 500);
-            }
-        } else {
-            // Volver a voltear
+        // Verificar si todas las cartas están emparejadas
+        if (matchedPairs === cards.length) {
             setTimeout(() => {
-                card1.classList.remove('flipped');
-                card2.classList.remove('flipped');
-                card1.style.backgroundImage = '';
-                card2.style.backgroundImage = '';
-            }, 500);
+                document.getElementById('win-modal').classList.remove('hidden');
+            }, 800); // Pequeño retraso para dar feedback visual
         }
-        
-        flippedCards = [];
-        lockBoard = false;
+    } else {
+        setTimeout(() => {
+            card1.classList.remove('flipped');
+            card2.classList.remove('flipped');
+            card1.style.backgroundImage = 'url(images/back-card.jpg)';
+            card2.style.backgroundImage = 'url(images/back-card.jpg)';
+        }, 1000);
     }
+    
+    flippedCards = [];
+}
+
+// Añade estos eventos al final del JS:
+document.querySelector('.close-btn').addEventListener('click', () => {
+    document.getElementById('win-modal').classList.add('hidden');
+});
+
+document.getElementById('replay-btn').addEventListener('click', () => {
+    location.reload();
+});
 
     // ===== REINICIAR =====
     replayBtn.addEventListener('click', () => {
