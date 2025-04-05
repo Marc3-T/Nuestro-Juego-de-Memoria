@@ -8,9 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 6, image: 'images/foto6.jpg' }
     ];
 
+    // Duplicar y mezclar cartas
     const gameCards = [...cards, ...cards].sort(() => Math.random() - 0.5);
     let flippedCards = [];
     let matchedPairs = 0;
+    let canFlip = true;
 
     const memoryBoard = document.getElementById('memory-board');
     const winModal = document.getElementById('win-modal');
@@ -31,17 +33,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function flipCard(e) {
+        if (!canFlip) return;
+        
         e.preventDefault();
         const selectedCard = e.currentTarget;
         
-        if (selectedCard.classList.contains('flipped') || flippedCards.length >= 2) return;
+        if (selectedCard.classList.contains('flipped') || 
+            selectedCard.classList.contains('matched') || 
+            flippedCards.length >= 2) {
+            return;
+        }
         
         selectedCard.classList.add('flipped');
-        selectedCard.style.backgroundImage = `url(${gameCards[selectedCard.dataset.index].image})`;
+        selectedCard.style.backgroundImage = `url('${gameCards[selectedCard.dataset.index].image}')`;
         flippedCards.push(selectedCard);
         
         if (flippedCards.length === 2) {
-            checkForMatch();
+            canFlip = false;
+            setTimeout(checkForMatch, 500);
         }
     }
 
@@ -53,22 +62,25 @@ document.addEventListener('DOMContentLoaded', () => {
             card2.classList.add('matched');
             matchedPairs++;
             
-            // Mostrar modal si se completan todos los pares
+            card1.style.backgroundImage = `url('${gameCards[card1.dataset.index].image}')`;
+            card2.style.backgroundImage = `url('${gameCards[card2.dataset.index].image}')`;
+            
             if (matchedPairs === cards.length) {
                 setTimeout(() => {
                     winModal.classList.remove('hidden');
-                }, 500);
+                }, 800);
             }
         } else {
             setTimeout(() => {
                 card1.classList.remove('flipped');
                 card2.classList.remove('flipped');
-                card1.style.backgroundImage = 'url(../images/back-card.png)';
-                card2.style.backgroundImage = 'url(../images/back-card.png)';
-            }, 1000);
+                card1.style.backgroundImage = 'url("images/back-card.png")';
+                card2.style.backgroundImage = 'url("images/back-card.png")';
+            }, 500);
         }
         
         flippedCards = [];
+        canFlip = true;
     }
 
     // Cerrar o reiniciar el juego
@@ -78,6 +90,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     replayBtn.addEventListener('click', () => {
         winModal.classList.add('hidden');
-        location.reload();
+        setTimeout(() => {
+            location.reload();
+        }, 300);
     });
+
+    // Precargar imágenes para mejor rendimiento
+    function preloadImages() {
+        const images = [];
+        gameCards.forEach(card => {
+            images.push(card.image);
+        });
+        images.push('images/back-card.png');
+        images.push('images/foto-special.jpg');
+        
+        images.forEach(image => {
+            new Image().src = image;
+        });
+    }
+    
+    preloadImages();
+});
 });
