@@ -27,21 +27,21 @@ document.addEventListener('DOMContentLoaded', () => {
         memoryBoard.appendChild(cardElement);
     });
 
-    function flipCard(e) {
-        e.preventDefault();
-        const selectedCard = e.currentTarget;
+function flipCard(e) {
+    e.preventDefault();
+    const selectedCard = e.currentTarget;
         
-        if (selectedCard.classList.contains('flipped') || flippedCards.length >= 2) return;
+    if (selectedCard.classList.contains('flipped') || flippedCards.length >= 2) return;
         
         // Mostrar imagen frontal (sin sobrescribir el estilo permanentemente)
-        selectedCard.style.setProperty('background-image', `url(${gameCards[selectedCard.dataset.index].image})`, 'important');
-        selectedCard.classList.add('flipped');
-        flippedCards.push(selectedCard);
+    selectedCard.style.setProperty('background-image', `url(${gameCards[selectedCard.dataset.index].image})`, 'important');
+    selectedCard.classList.add('flipped');
+    flippedCards.push(selectedCard);
         
-        if (flippedCards.length === 2) {
+    if (flippedCards.length === 2) {
             checkForMatch();
-        }
     }
+}
 
 function checkForMatch() {
     const [card1, card2] = flippedCards;
