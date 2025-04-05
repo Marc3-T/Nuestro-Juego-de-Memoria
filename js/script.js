@@ -28,45 +28,43 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 function flipCard(e) {
-    e.preventDefault();
+    e.preventDefault(); // Para Safari en iOS
     const selectedCard = e.currentTarget;
         
+        // Evitar voltear si ya está volteada o emparejada
     if (selectedCard.classList.contains('flipped') || flippedCards.length >= 2) return;
         
-        // Mostrar imagen frontal (sin sobrescribir el estilo permanentemente)
-    selectedCard.style.setProperty('background-image', `url(${gameCards[selectedCard.dataset.index].image})`, 'important');
     selectedCard.classList.add('flipped');
+    selectedCard.style.backgroundImage = `url(${gameCards[selectedCard.dataset.index].image})`;
     flippedCards.push(selectedCard);
         
     if (flippedCards.length === 2) {
-            checkForMatch();
+        checkForMatch();
     }
 }
 
 function checkForMatch() {
     const [card1, card2] = flippedCards;
-    
+        
     if (card1.dataset.id === card2.dataset.id) {
         card1.classList.add('matched');
         card2.classList.add('matched');
         matchedPairs++;
-        
+            
         if (matchedPairs === cards.length) {
             setTimeout(() => {
-                winModal.classList.remove('hidden');
-                startConfetti();
+                winMessage.classList.remove('hidden');
             }, 500);
         }
     } else {
         setTimeout(() => {
             card1.classList.remove('flipped');
             card2.classList.remove('flipped');
-            // Restaurar el dorso correctamente:
-            card1.style.removeProperty('background-image');
-            card2.style.removeProperty('background-image');
+            card1.style.backgroundImage = 'url(images/back-card.jpg)';
+            card2.style.backgroundImage = 'url(images/back-card.jpg)';
         }, 1000);
     }
-    
+        
     flippedCards = [];
 }
 
