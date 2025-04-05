@@ -53,11 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
             card2.classList.add('matched');
             matchedPairs++;
             
-            // Mostrar modal si se completan todos los pares
+            // Verificar si se completó el juego
             if (matchedPairs === cards.length) {
                 setTimeout(() => {
                     winModal.classList.remove('hidden');
-                }, 500);
+                }, 800); // Retraso para ver el último par
             }
         } else {
             setTimeout(() => {
@@ -71,13 +71,30 @@ document.addEventListener('DOMContentLoaded', () => {
         flippedCards = [];
     }
 
-    // Cerrar o reiniciar el juego
+    // Cerrar modal o reiniciar
     closeBtn.addEventListener('click', () => {
         winModal.classList.add('hidden');
     });
 
     replayBtn.addEventListener('click', () => {
         winModal.classList.add('hidden');
-        location.reload();
+        resetGame();
     });
+
+    function resetGame() {
+        memoryBoard.innerHTML = '';
+        flippedCards = [];
+        matchedPairs = 0;
+        gameCards.sort(() => Math.random() - 0.5);
+        
+        gameCards.forEach((card, index) => {
+            const cardElement = document.createElement('div');
+            cardElement.classList.add('card');
+            cardElement.dataset.id = card.id;
+            cardElement.dataset.index = index;
+            cardElement.addEventListener('click', flipCard);
+            cardElement.addEventListener('touchend', flipCard, { passive: true });
+            memoryBoard.appendChild(cardElement);
+        });
+    }
 });
