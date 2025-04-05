@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cardElement.dataset.index = index;
         cardElement.style.setProperty('--front-image', `url(${card.image})`);
         
+        // Eventos para touch y click
         cardElement.addEventListener('click', flipCard);
         cardElement.addEventListener('touchend', flipCard, { passive: true });
         
