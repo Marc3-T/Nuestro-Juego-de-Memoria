@@ -53,20 +53,21 @@ document.addEventListener('DOMContentLoaded', () => {
             if (matchedPairs === cards.length) {
                 setTimeout(() => {
                     winModal.classList.remove('hidden');
-                    startConfetti(); // ¡Lanzar confeti!
+                    startConfetti();
                 }, 500);
             }
         } else {
             setTimeout(() => {
                 card1.classList.remove('flipped');
                 card2.classList.remove('flipped');
-                card1.style.backgroundImage = 'url(images/back-card.jpg)';
-                card2.style.backgroundImage = 'url(images/back-card.jpg)';
+                // Restablecer el fondo al dorso (¡esta es la línea clave!)
+                card1.style.backgroundImage = '';
+                card2.style.backgroundImage = '';
             }, 1000);
         }
         
         flippedCards = [];
-    }
+}
 
     replayBtn.addEventListener('click', () => {
         winModal.classList.add('hidden');
