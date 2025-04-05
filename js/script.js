@@ -34,14 +34,14 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const selectedCard = e.currentTarget;
         
-        if (selectedCard.classList.contains('flipped') || flippedCards.length >= 2) return;
+        if (selectedCard.classList.contains('flipped') return;
         
         selectedCard.classList.add('flipped');
         selectedCard.style.backgroundImage = `url(${gameCards[selectedCard.dataset.index].image})`;
         flippedCards.push(selectedCard);
         
         if (flippedCards.length === 2) {
-            checkForMatch();
+            setTimeout(checkForMatch, 500);
         }
     }
 
@@ -53,11 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
             card2.classList.add('matched');
             matchedPairs++;
             
-            // Verificar si se completó el juego
+            // Verificar si todas las cartas están emparejadas
             if (matchedPairs === cards.length) {
                 setTimeout(() => {
                     winModal.classList.remove('hidden');
-                }, 800); // Retraso para ver el último par
+                }, 1000);
             }
         } else {
             setTimeout(() => {
@@ -65,36 +65,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 card2.classList.remove('flipped');
                 card1.style.backgroundImage = 'url(images/back-card.png)';
                 card2.style.backgroundImage = 'url(images/back-card.png)';
-            }, 1000);
+            }, 500);
         }
         
         flippedCards = [];
     }
 
-    // Cerrar modal o reiniciar
+    // Cerrar modal y reiniciar juego
     closeBtn.addEventListener('click', () => {
         winModal.classList.add('hidden');
     });
 
     replayBtn.addEventListener('click', () => {
         winModal.classList.add('hidden');
-        resetGame();
+        location.reload();
     });
 
-    function resetGame() {
-        memoryBoard.innerHTML = '';
-        flippedCards = [];
-        matchedPairs = 0;
-        gameCards.sort(() => Math.random() - 0.5);
-        
-        gameCards.forEach((card, index) => {
-            const cardElement = document.createElement('div');
-            cardElement.classList.add('card');
-            cardElement.dataset.id = card.id;
-            cardElement.dataset.index = index;
-            cardElement.addEventListener('click', flipCard);
-            cardElement.addEventListener('touchend', flipCard, { passive: true });
-            memoryBoard.appendChild(cardElement);
-        });
-    }
+    // Cerrar modal al hacer clic fuera del contenido
+    winModal.addEventListener('click', (e) => {
+        if (e.target === winModal) {
+            winModal.classList.add('hidden');
+        }
+    });
 });
