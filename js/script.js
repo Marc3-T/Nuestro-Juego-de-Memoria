@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 6, image: 'images/foto6.jpg' }
     ];
 
-    // Duplicar y mezclar cartas
+    // Duplicar y mezclar carta
     const gameCards = [...cards, ...cards].sort(() => Math.random() - 0.5);
     let flippedCards = [];
     let matchedPairs = 0;
