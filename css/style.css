@@ -22,22 +22,39 @@ h1 {
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
     margin: 20px auto;
+    perspective: 1000px;
 }
 
 .card {
     width: 100%;
     aspect-ratio: 1/1;
-    background-image: url('../images/back-card.png');
+    background-image: url('../images/back-card.jpg');
     background-size: cover;
     border-radius: 10px;
     cursor: pointer;
-    transition: transform 0.3s, opacity 0.3s;
-    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.5s;
+    position: relative;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: rotateY(180deg);
 }
 
 .card.flipped {
     transform: rotateY(180deg);
-    background-image: var(--front-image) !important;
 }
 
 .card.matched {
@@ -95,10 +112,4 @@ button:hover {
 
 /* Responsive para iPhone */
 @media (max-width: 480px) {
-    #memory-board {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    .modal-content {
-        padding: 20px;
-    }
-}
+    #memory-board
