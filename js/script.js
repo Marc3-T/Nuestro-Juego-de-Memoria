@@ -22,12 +22,10 @@ document.addEventListener('DOMContentLoaded', () => {
         cardElement.classList.add('card');
         cardElement.dataset.id = card.id;
         cardElement.dataset.index = index;
-        cardElement.style.setProperty('--front-image', `url(${card.image})`);
+        cardElement.style.setProperty('--front-image', `url('${card.image}')`);
         
-        // Eventos para touch y click
         cardElement.addEventListener('click', flipCard);
         cardElement.addEventListener('touchend', flipCard, { passive: true });
-        
         memoryBoard.appendChild(cardElement);
     });
 
