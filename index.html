@@ -1,21 +1,9 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>a Meses - Nuestro Juego de Memoria</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Nuestra Memoria ❤️</h1>
-        <div id="memory-board"></div>
-        <div id="win-message" class="hidden">
-            <h2>¡Ganaste! 🎉</h2>
-            <p>Cada partida ganada es como nuestro amor: ¡perfecta!</p>
-            <button id="replay-btn">Jugar de nuevo</button>
-        </div>
+<!-- Dentro de <body> -->
+<div id="win-modal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>¡Memoria Completa! ❤️</h2>
+        <p>Has emparejado todas nuestras fotos... igual que hemos emparejado nuestras vidas estos 4 meses.</p>
+        <button id="replay-btn">Jugar de nuevo</button>
     </div>
-    <script src="js/script.js"></script>
-</body>
-</html>
+</div>
