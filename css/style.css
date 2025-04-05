@@ -26,7 +26,7 @@ h1 {
 .card {
     width: 100%;
     aspect-ratio: 1/1;
-    background-color: #f8bbd0; /* Color de respaldo */
+    background-color: #f8bbd0; /* Color de respaldo /
     background-image: url('../images/back-card.png');
     background-size: contain;
     background-repeat: no-repeat;
