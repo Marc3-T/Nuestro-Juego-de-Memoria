@@ -33,8 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (selectedCard.classList.contains('flipped') || flippedCards.length >= 2) return;
         
+        // Mostrar imagen frontal (sin sobrescribir el estilo permanentemente)
+        selectedCard.style.setProperty('background-image', `url(${gameCards[selectedCard.dataset.index].image})`, 'important');
         selectedCard.classList.add('flipped');
-        selectedCard.style.backgroundImage = `url(${gameCards[selectedCard.dataset.index].image})`;
         flippedCards.push(selectedCard);
         
         if (flippedCards.length === 2) {
@@ -42,31 +43,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function checkForMatch() {
-        const [card1, card2] = flippedCards;
+function checkForMatch() {
+    const [card1, card2] = flippedCards;
+    
+    if (card1.dataset.id === card2.dataset.id) {
+        card1.classList.add('matched');
+        card2.classList.add('matched');
+        matchedPairs++;
         
-        if (card1.dataset.id === card2.dataset.id) {
-            card1.classList.add('matched');
-            card2.classList.add('matched');
-            matchedPairs++;
-            
-            if (matchedPairs === cards.length) {
-                setTimeout(() => {
-                    winModal.classList.remove('hidden');
-                    startConfetti();
-                }, 500);
-            }
-        } else {
+        if (matchedPairs === cards.length) {
             setTimeout(() => {
-                card1.classList.remove('flipped');
-                card2.classList.remove('flipped');
-                // Restablecer el fondo al dorso (¡esta es la línea clave!)
-                card1.style.backgroundImage = '';
-                card2.style.backgroundImage = '';
-            }, 1000);
+                winModal.classList.remove('hidden');
+                startConfetti();
+            }, 500);
         }
-        
-        flippedCards = [];
+    } else {
+        setTimeout(() => {
+            card1.classList.remove('flipped');
+            card2.classList.remove('flipped');
+            // Restaurar el dorso correctamente:
+            card1.style.removeProperty('background-image');
+            card2.style.removeProperty('background-image');
+        }, 1000);
+    }
+    
+    flippedCards = [];
 }
 
     replayBtn.addEventListener('click', () => {
