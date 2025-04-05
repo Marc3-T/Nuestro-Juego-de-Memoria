@@ -3,48 +3,8 @@ body {
     background: #ffebee;
     margin: 0;
     padding: 20px;
-    touch-action: manipulation; /* Evita zoom no deseado */
-}
-
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    background: white;
-    padding: 25px;
-    border-radius: 15px;
-    text-align: center;
-    width: 80%;
-    max-width: 400px;
-    position: relative;
-}
-
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 24px;
-    cursor: pointer;
-}
-
-/* Efecto de aparición */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.modal {
-    animation: fadeIn 0.5s;
+    touch-action: manipulation;
+    overflow-x: hidden;
 }
 
 .container {
@@ -67,16 +27,17 @@ h1 {
 .card {
     width: 100%;
     aspect-ratio: 1/1;
-    background-image: url('../images/back-card.png');
+    background-image: url('../images/back-card.jpg');
     background-size: cover;
     border-radius: 10px;
     cursor: pointer;
-    transition: transform 0.3s;
-    -webkit-tap-highlight-color: transparent; /* Elimina el resaltado azul en iOS */
+    transition: transform 0.3s, opacity 0.3s;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .card.flipped {
     transform: rotateY(180deg);
+    background-image: var(--front-image) !important;
 }
 
 .card.matched {
@@ -84,42 +45,60 @@ h1 {
     cursor: default;
 }
 
-#win-message {
-    flex-direction: column; /* Para centrar contenido */
-    align-items: center;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    border-radius: 10px;
+/* Modal de Victoria */
+.modal {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 100;
-    display: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
-#win-message h2 {
-    color: #d32f2f;
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 80%;
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
 }
 
 button {
     background: #d32f2f;
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 12px 25px;
+    border-radius: 25px;
     font-size: 16px;
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 15px;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #b71c1c;
 }
 
 .hidden {
     display: none !important;
 }
 
-/* Ajustes para iPhone */
+/* Responsive para iPhone */
 @media (max-width: 480px) {
     #memory-board {
-        grid-template-columns: repeat(3, 1fr); /* 3 columnas en móviles */
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .modal-content {
+        padding: 20px;
     }
 }
