@@ -10,23 +10,19 @@
     <div class="container">
         <h1>Nuestra Memoria ❤️</h1>
         <div id="memory-board"></div>
-        <div id="win-message" class="hidden">
-            <h2>¡Ganaste! 🎉</h2>
-            <p>Cada partida ganada es como nuestro amor: ¡perfecta!</p>
-            <button id="replay-btn">Jugar de nuevo</button>
-        </div>
     </div>
-    <script src="js/script.js"></script>
-    <!-- Añade esto al final de tu <body> -->
-    <div id="win-modal" class="hidden">
+
+    <!-- Ventana de Victoria (modal) -->
+    <div id="win-modal" class="modal hidden">
         <div class="modal-content">
             <h2>¡Ganaste! 🎉</h2>
-            <p>¡Encontraste todos nuestros recuerdos juntos!</p>
+            <p>Encontraste todas las parejas... como encontraste mi corazón hace 4 meses.</p>
             <button id="replay-btn">Jugar de nuevo</button>
         </div>
     </div>
-    
-    <!-- Incluye la librería de confeti -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Scripts -->
+    <script src="js/confetti.js"></script> <!-- Confeti (nuevo) -->
+    <script src="js/script.js"></script>
 </body>
 </html>
