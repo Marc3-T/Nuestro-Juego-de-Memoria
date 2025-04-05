@@ -28,7 +28,7 @@ h1 {
 .card {
     width: 100%;
     aspect-ratio: 1/1;
-    background-image: url('../images/back-card.jpg');
+    background-image: url('../images/back-card.png');
     background-size: cover;
     border-radius: 10px;
     cursor: pointer;
