@@ -110,6 +110,11 @@ button:hover {
     display: none !important;
 }
 
-/* Responsive para iPhone */
 @media (max-width: 480px) {
-    #memory-board
+    #memory-board {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .modal-content {
+        padding: 20px;
+    }
+}
