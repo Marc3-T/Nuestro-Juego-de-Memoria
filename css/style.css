@@ -51,6 +51,8 @@ h1 {
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     transform: rotateY(180deg);
+    /* Añade esto para forzar que herede la imagen frontal: */
+    background-image: var(--front-image);
 }
 
 .card.flipped {
