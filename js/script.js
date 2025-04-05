@@ -8,12 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 6, image: 'images/foto6.jpg' }
     ];
 
+    // Duplicar y mezclar cartas
     const gameCards = [...cards, ...cards].sort(() => Math.random() - 0.5);
     let flippedCards = [];
     let matchedPairs = 0;
 
     const memoryBoard = document.getElementById('memory-board');
-    const winModal = document.getElementById('win-modal');
+    const winMessage = document.getElementById('win-message');
     const replayBtn = document.getElementById('replay-btn');
 
     // Crear tablero
@@ -22,19 +23,23 @@ document.addEventListener('DOMContentLoaded', () => {
         cardElement.classList.add('card');
         cardElement.dataset.id = card.id;
         cardElement.dataset.index = index;
-        cardElement.style.setProperty('--front-image', `url('${card.image}')`);
         
+        // Usar eventos táctiles y de clic
         cardElement.addEventListener('click', flipCard);
         cardElement.addEventListener('touchend', flipCard, { passive: true });
+        
         memoryBoard.appendChild(cardElement);
     });
 
     function flipCard(e) {
+        e.preventDefault(); // Para Safari en iOS
         const selectedCard = e.currentTarget;
         
+        // Evitar voltear si ya está volteada o emparejada
         if (selectedCard.classList.contains('flipped') || flippedCards.length >= 2) return;
         
         selectedCard.classList.add('flipped');
+        selectedCard.style.backgroundImage = `url(${gameCards[selectedCard.dataset.index].image})`;
         flippedCards.push(selectedCard);
         
         if (flippedCards.length === 2) {
@@ -52,47 +57,22 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (matchedPairs === cards.length) {
                 setTimeout(() => {
-                    winModal.classList.remove('hidden');
-                    triggerConfetti();
-                }, 800);
+                    winMessage.classList.remove('hidden');
+                }, 500);
             }
         } else {
             setTimeout(() => {
                 card1.classList.remove('flipped');
                 card2.classList.remove('flipped');
+                card1.style.backgroundImage = 'url(images/back-card.jpg)';
+                card2.style.backgroundImage = 'url(images/back-card.jpg)';
             }, 1000);
         }
         
         flippedCards = [];
     }
 
-    function triggerConfetti() {
-        confetti({
-            particleCount: 150,
-            spread: 70,
-            origin: { y: 0.6 },
-            colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
-        });
-    }
-
     replayBtn.addEventListener('click', () => {
-        winModal.classList.add('hidden');
-        resetGame();
+        location.reload();
     });
-
-    function resetGame() {
-        memoryBoard.innerHTML = '';
-        flippedCards = [];
-        matchedPairs = 0;
-        gameCards.sort(() => Math.random() - 0.5).forEach((card, index) => {
-            const cardElement = document.createElement('div');
-            cardElement.classList.add('card');
-            cardElement.dataset.id = card.id;
-            cardElement.dataset.index = index;
-            cardElement.style.setProperty('--front-image', `url(${card.image})`);
-            cardElement.addEventListener('click', flipCard);
-            cardElement.addEventListener('touchend', flipCard, { passive: true });
-            memoryBoard.appendChild(cardElement);
-        });
-    }
 });
