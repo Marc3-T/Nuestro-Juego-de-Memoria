@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const memoryBoard = document.getElementById('memory-board');
     const winModal = document.getElementById('win-modal');
+    const closeBtn = document.querySelector('.close-btn');
     const replayBtn = document.getElementById('replay-btn');
 
     // Crear tablero
@@ -22,55 +23,61 @@ document.addEventListener('DOMContentLoaded', () => {
         cardElement.classList.add('card');
         cardElement.dataset.id = card.id;
         cardElement.dataset.index = index;
+        
         cardElement.addEventListener('click', flipCard);
         cardElement.addEventListener('touchend', flipCard, { passive: true });
+        
         memoryBoard.appendChild(cardElement);
     });
 
-function flipCard(e) {
-    e.preventDefault(); // Para Safari en iOS
-    const selectedCard = e.currentTarget;
+    function flipCard(e) {
+        e.preventDefault();
+        const selectedCard = e.currentTarget;
         
-        // Evitar voltear si ya está volteada o emparejada
-    if (selectedCard.classList.contains('flipped') || flippedCards.length >= 2) return;
+        if (selectedCard.classList.contains('flipped') || flippedCards.length >= 2) return;
         
-    selectedCard.classList.add('flipped');
-    selectedCard.style.backgroundImage = `url(${gameCards[selectedCard.dataset.index].image})`;
-    flippedCards.push(selectedCard);
+        selectedCard.classList.add('flipped');
+        selectedCard.style.backgroundImage = `url(${gameCards[selectedCard.dataset.index].image})`;
+        flippedCards.push(selectedCard);
         
-    if (flippedCards.length === 2) {
-        checkForMatch();
-    }
-}
-
-function checkForMatch() {
-    const [card1, card2] = flippedCards;
-        
-    if (card1.dataset.id === card2.dataset.id) {
-        card1.classList.add('matched');
-        card2.classList.add('matched');
-        matchedPairs++;
-            
-        if (matchedPairs === cards.length) {
-            setTimeout(() => {
-                winMessage.classList.remove('hidden');
-            }, 500);
+        if (flippedCards.length === 2) {
+            checkForMatch();
         }
-    } else {
-        setTimeout(() => {
-            card1.classList.remove('flipped');
-            card2.classList.remove('flipped');
-            card1.style.backgroundImage = 'url(images/back-card.png)';
-            card2.style.backgroundImage = 'url(images/back-card.png)';
-        }, 1000);
     }
+
+    function checkForMatch() {
+        const [card1, card2] = flippedCards;
         
-    flippedCards = [];
-}
+        if (card1.dataset.id === card2.dataset.id) {
+            card1.classList.add('matched');
+            card2.classList.add('matched');
+            matchedPairs++;
+            
+            // Mostrar modal si se completan todos los pares
+            if (matchedPairs === cards.length) {
+                setTimeout(() => {
+                    winModal.classList.remove('hidden');
+                }, 500);
+            }
+        } else {
+            setTimeout(() => {
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+                card1.style.backgroundImage = 'url(images/back-card.jpg)';
+                card2.style.backgroundImage = 'url(images/back-card.jpg)';
+            }, 1000);
+        }
+        
+        flippedCards = [];
+    }
+
+    // Cerrar o reiniciar el juego
+    closeBtn.addEventListener('click', () => {
+        winModal.classList.add('hidden');
+    });
 
     replayBtn.addEventListener('click', () => {
         winModal.classList.add('hidden');
-        stopConfetti(); // Detener confeti
         location.reload();
     });
 });
